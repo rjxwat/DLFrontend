@@ -32,7 +32,7 @@ function App() {
     return categories[category] || "#3B82F6";
   };
 
-  const API_BASE_URL = "https://c9ca-160-20-123-9.ngrok-free.app";
+  const API_BASE_URL = "https://5acc-160-20-123-9.ngrok-free.app";
 
   const handlePredict = async (shouldSave: boolean = false) => {
     if (!newsText.trim()) {
