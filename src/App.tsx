@@ -7,7 +7,6 @@ import {
   Loader2,
   Upload,
 } from "lucide-react";
-import logo from "./image.png"; // Import the image
 
 interface PredictionResponse {
   category: string;
@@ -34,9 +33,45 @@ function App() {
 
   const API_BASE_URL = "https://5acc-160-20-123-9.ngrok-free.app";
 
+  const validateText = (
+    text: string
+  ): { isValid: boolean; error: string | null } => {
+    // Remove extra spaces and split into words
+    const words = text.trim().split(/\s+/);
+
+    // Check minimum length
+    if (words.length < 10) {
+      return {
+        isValid: false,
+        error: "Text must contain at least 10 words",
+      };
+    }
+
+    // Check if text contains only alphanumeric characters and basic punctuation
+    const validTextRegex = /^[a-zA-Z0-9\s.,!?'"-]+$/;
+    if (!validTextRegex.test(text)) {
+      return {
+        isValid: false,
+        error: "Text can only contain letters, numbers, and basic punctuation",
+      };
+    }
+
+    return {
+      isValid: true,
+      error: null,
+    };
+  };
+
   const handlePredict = async (shouldSave: boolean = false) => {
-    if (!newsText.trim()) {
+    const text = newsText.trim();
+    if (!text) {
       setError("Please enter some text to classify");
+      return;
+    }
+
+    const validation = validateText(text);
+    if (!validation.isValid) {
+      setError(validation.error);
       return;
     }
 
@@ -85,10 +120,16 @@ function App() {
     setError(null);
     setSaved(false);
 
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
     try {
+      const text = await selectedFile.text();
+      const validation = validateText(text);
+      if (!validation.isValid) {
+        throw new Error(validation.error || "Invalid text content");
+      }
+
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
       const response = await fetch(`${API_BASE_URL}/predict-file`, {
         method: "POST",
         body: formData,
