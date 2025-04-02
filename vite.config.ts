@@ -11,19 +11,19 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/predict': {
-        target: 'http://localhost:5000',
+        target: 'https://c9ca-160-20-123-9.ngrok-free.app',
         changeOrigin: true,
         secure: false,
         ws: true,
       },
       '/predict-and-log': {
-        target: 'http://localhost:5000',
+        target: 'https://c9ca-160-20-123-9.ngrok-free.app',
         changeOrigin: true,
         secure: false,
         ws: true,
       },
       '/predict-file': {
-        target: 'http://localhost:5000',
+        target: 'https://c9ca-160-20-123-9.ngrok-free.app',
         changeOrigin: true,
         secure: false,
         ws: true,
